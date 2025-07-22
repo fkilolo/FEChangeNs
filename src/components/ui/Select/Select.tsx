@@ -52,9 +52,9 @@ export const Select = <T extends BaseObjectResponse>({
     if (isFunction(fetchFunction)) {
       setIsFetching(true);
       const queryString = buildQuery({ ...params, name: name }, sort);
-      const res = await fetchFunction?.(queryString);
-      if (res && res.data) {
-        const _options = res.data.result.map((item) => ({
+      const res : any = await fetchFunction?.(queryString);
+      if (res) {
+        const _options = res.result.map((item: any) => ({
           label: `${
             accessoryPrefixOptionName
               ? `${item[accessoryPrefixOptionName]}: `

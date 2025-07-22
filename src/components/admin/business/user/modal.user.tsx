@@ -127,13 +127,13 @@ const ModalUser = (props: IProps) => {
     }
 
     async function fetchTeamList(name: string): Promise<ITeamSelect[]> {
-        const res = await callFetchTeamPublic(`current=1&pageSize=100&name=/${name}/i`);
-        if (res && res.data) {
-            const list = res.data.result;
-            const temp = list.map(item => {
+        const res: any = await callFetchTeamPublic(`current=1&pageSize=100&name=/${name}/i`);
+        if (res) {
+            const list = res.result;
+            const temp = list.map((item: { name: string; _id: string }) => {
                 return {
-                    label: item.name as string,
-                    value: item._id as string
+                    label: item.name,
+                    value: item._id
                 }
             })
             return temp;

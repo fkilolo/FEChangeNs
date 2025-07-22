@@ -20,9 +20,9 @@ const NO_RETRY_HEADER = 'x-no-retry';
 
 const handleRefreshToken = async (): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
-        const res = await instance.get<IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh');
+        const res: any = await instance.get<IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh');
 
-        if (res && res.data) return res.data.access_token;
+        if (res) return res.access_token;
         else return null;
     });
 };

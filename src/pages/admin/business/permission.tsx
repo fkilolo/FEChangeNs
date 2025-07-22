@@ -24,8 +24,8 @@ const PermissionPage = () => {
 
     const handleDeletePermission = async (_id: string | undefined) => {
         if (_id) {
-            const res = await callDeletePermission(_id);
-            if (res && res.data) {
+            const res: any = await callDeletePermission(_id);
+            if (res) {
                 message.success('Xóa Permission thành công');
                 tableRef.current?.reload();
             } else {

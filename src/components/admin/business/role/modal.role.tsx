@@ -6,21 +6,35 @@ import ModuleApi from "./module.api";
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { resetSingleRole } from "@/redux/slice/business/roleSlide";
+import { fetchRoleById, resetSingleRole } from "@/redux/slice/business/roleSlide";
 import { callFetchPermission } from "@/config/api/business/permission.api";
-import { callCreateRole, callUpdateRole } from "@/config/api/business/role.api";
+import { callCreateRole, callFetchRoleById, callUpdateRole } from "@/config/api/business/role.api";
 import { IPermission } from "@/types/model/permissionModel/permission.d";
 
 interface IProps {
     openModal: boolean;
     setOpenModal: (v: boolean) => void;
-    reloadTable: () => void;
+    reloadTable: () => void;    
+    selectedRoleId: string ;
 }
 
 const ModalRole = (props: IProps) => {
-    const { openModal, setOpenModal, reloadTable } = props;
-    const singleRole = useAppSelector(state => state.role.singleRole);
+    const { openModal, setOpenModal, reloadTable, selectedRoleId } = props;
+    
     const dispatch = useAppDispatch();
+    const [singleRole, setSingleRole] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (selectedRoleId) {
+                const res = await callFetchRoleById(selectedRoleId);
+                if (res) setSingleRole(res);
+            } else {
+                setSingleRole(null); // reset khi tạo mới
+            }
+        };
+        fetchData();
+    }, [selectedRoleId]);
 
     const [form] = Form.useForm();
 
@@ -40,9 +54,9 @@ const ModalRole = (props: IProps) => {
 
     useEffect(() => {
         const init = async () => {
-            const res = await callFetchPermission(`current=1&pageSize=100000`);
-            if (res.data?.result) {
-                setListPermissions(groupByPermission(res.data?.result))
+            const res :any= await callFetchPermission(`current=1&pageSize=100000`);
+            if (res?.result) {
+                setListPermissions(groupByPermission(res?.result))
             }
         }
         init();
@@ -93,8 +107,8 @@ const ModalRole = (props: IProps) => {
             const role = {
                 name, description, isActive, permissions: checkedPermissions
             }
-            const res = await callUpdateRole(role, singleRole._id);
-            if (res.data) {
+            const res :any= await callUpdateRole(role, singleRole._id);
+            if (res) {
                 message.success("Cập nhật role thành công");
                 handleReset();
                 reloadTable();
@@ -109,8 +123,8 @@ const ModalRole = (props: IProps) => {
             const role = {
                 name, description, isActive, permissions: checkedPermissions
             }
-            const res = await callCreateRole(role);
-            if (res.data) {
+            const res :any= await callCreateRole(role);
+            if (res) {
                 message.success("Thêm mới role thành công");
                 handleReset();
                 reloadTable();
