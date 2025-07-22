@@ -66,7 +66,7 @@ const PermissionPage = () => {
             valueType: 'select',
             valueEnum: ALL_METHOD,
             sorter: true,
-            render: (_, record) => (
+            render: (_, record: any) => (
                 <p style={{ fontWeight: 'bold', color: colorMethod(record.method) }}>{record.method}</p>
             ),
         },
@@ -138,7 +138,7 @@ const PermissionPage = () => {
                 rowSelection={false}
                 request={async (params, sort): Promise<any> => {
                     const query = buildQuery(params, sort);
-                    const res = await dispatch(fetchPermission({ query })).unwrap();
+                    const res: any = await dispatch(fetchPermission({ query })).unwrap();
                     return {
                         data: res.result || [],
                         success: true,
@@ -149,13 +149,13 @@ const PermissionPage = () => {
                     showSizeChanger: true,
                     showTotal: (total, range) => <div>{range[0]}-{range[1]} trên {total} dòng</div>,
                 }}
-                toolBarRender={() => (
+                toolBarRender={() => [
                     <Access permission={ALL_PERMISSIONS.PERMISSIONS.CREATE}>
                         <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpenModal(true)}>
                             Thêm mới
                         </Button>
                     </Access>
-                )}
+                ]}
                 search={{
                     labelWidth: 'auto',
                     span: 8,
