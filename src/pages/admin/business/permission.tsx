@@ -1,5 +1,5 @@
 import DataTable from "@/components/client/data-table";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, message, notification } from "antd";
@@ -17,23 +17,17 @@ import { IPermission } from "@/types/model/permissionModel/permission.d";
 
 const PermissionPage = () => {
     const dispatch = useAppDispatch();
-
-    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [openModal, setOpenModal] = useState(false);
     const [dataInit, setDataInit] = useState<IPermission | null>(null);
-    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
-
+    const [openViewDetail, setOpenViewDetail] = useState(false);
     const tableRef = useRef<ActionType>();
-
-    const isFetching = useAppSelector(state => state.permission.isFetching);
-    const meta = useAppSelector(state => state.permission.meta);
-    const permissions = useAppSelector(state => state.permission.result);
 
     const handleDeletePermission = async (_id: string | undefined) => {
         if (_id) {
             const res = await callDeletePermission(_id);
             if (res && res.data) {
                 message.success('Xóa Permission thành công');
-                reloadTable();
+                tableRef.current?.reload();
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -41,29 +35,21 @@ const PermissionPage = () => {
                 });
             }
         }
-    }
-
-    const reloadTable = () => {
-        tableRef?.current?.reload();
-    }
+    };
 
     const columns: ProColumns<IPermission>[] = [
         {
             title: 'Tên',
             dataIndex: 'name',
-            render: (text, record, index, action) => {
-                return (
-                    <a href="#" onClick={() => {
-                        setOpenViewDetail(true);
-                        setDataInit(record);
-                    }}>
-                        {record.name}
-                    </a>
-                )
-            },
+            render: (_, record) => (
+                <a onClick={() => {
+                    setOpenViewDetail(true);
+                    setDataInit(record);
+                }}>{record.name}</a>
+            ),
             sorter: true,
             fieldProps: {
-                placeholder: 'Nhập dữ liệu',
+                placeholder: 'Nhập tên quyền',
             },
         },
         {
@@ -71,7 +57,7 @@ const PermissionPage = () => {
             dataIndex: 'apiPath',
             sorter: true,
             fieldProps: {
-                placeholder: 'Nhập dữ liệu',
+                placeholder: 'Nhập đường dẫn API',
             },
         },
         {
@@ -80,209 +66,126 @@ const PermissionPage = () => {
             valueType: 'select',
             valueEnum: ALL_METHOD,
             sorter: true,
-            render(dom, entity, index, action, schema) {
-                return (
-                    <p style={{ paddingLeft: 10, fontWeight: 'bold', marginBottom: 0, color: colorMethod(entity?.method as string) }}>{entity?.method || ''}</p>
-                )
-            },
+            render: (_, record) => (
+                <p style={{ fontWeight: 'bold', color: colorMethod(record.method) }}>{record.method}</p>
+            ),
         },
         {
             title: 'Module',
             dataIndex: 'module',
-            sorter: true,
             valueType: 'select',
             valueEnum: ALL_MODULES,
+            sorter: true,
         },
-        // {
-        //     title: 'Ngày tạo',
-        //     dataIndex: 'createdAt',
-        //     width: 200,
-        //     sorter: true,
-        //     render: (text, record, index, action) => {
-        //         return (
-        //             <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
-        //         )
-        //     },
-        //     hideInSearch: true,
-        // },
-        // {
-        //     title: 'Ngày sửa',
-        //     dataIndex: 'updatedAt',
-        //     width: 200,
-        //     sorter: true,
-        //     render: (text, record, index, action) => {
-        //         return (
-        //             <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
-        //         )
-        //     },
-        //     hideInSearch: true,
-        // },
         {
-
             title: 'Thao tác',
             hideInSearch: true,
-            width: 50,
-            render: (_value, entity, _index, _action) => (
+            render: (_, record) => (
                 <Space>
-                    <Access
-                        permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE}
-                        hideChildren
-                    >
+                    <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE}>
                         <EditOutlined
-                            style={{
-                                fontSize: 20,
-                                color: '#ffa500',
-                            }}
-                            type=""
+                            style={{ fontSize: 20, color: '#ffa500' }}
                             onClick={() => {
                                 setOpenModal(true);
-                                setDataInit(entity);
+                                setDataInit(record);
                             }}
                         />
                     </Access>
-                    <Access
-                        permission={ALL_PERMISSIONS.PERMISSIONS.DELETE}
-                        hideChildren
-                    >
+                    <Access permission={ALL_PERMISSIONS.PERMISSIONS.DELETE}>
                         <Popconfirm
-                            placement="leftTop"
-                            title={"Xác nhận xóa permission"}
-                            description={"Bạn có chắc chắn muốn xóa permission này ?"}
-                            onConfirm={() => handleDeletePermission(entity._id)}
+                            title="Xác nhận xóa permission"
+                            description="Bạn có chắc chắn muốn xóa permission này ?"
+                            onConfirm={() => handleDeletePermission(record._id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
-                            <span style={{ cursor: "pointer", margin: "0 10px" }}>
-                                <DeleteOutlined
-                                    style={{
-                                        fontSize: 20,
-                                        color: '#ff4d4f',
-                                    }}
-                                />
-                            </span>
+                            <DeleteOutlined
+                                style={{ fontSize: 20, color: '#ff4d4f', cursor: 'pointer' }}
+                            />
                         </Popconfirm>
                     </Access>
                 </Space>
             ),
-
         },
     ];
 
-    const buildQuery = (params: any, sort: any, filter: any) => {
-        const clone = { ...params };
+    const buildQuery = (params: any, sort: any) => {
+        const filters = { ...params };
+        ['name', 'apiPath', 'method', 'module'].forEach(key => {
+            if (filters[key]) filters[key] = `/${filters[key]}/i`;
+        });
+        let query = queryString.stringify(filters);
 
-        if (clone.name) clone.name = `/${clone.name}/i`;
-        if (clone.apiPath) clone.apiPath = `/${clone.apiPath}/i`;
-        if (clone.method) clone.method = `/${clone.method}/i`;
-        if (clone.module) clone.module = `/${clone.module}/i`;
-
-
-        let temp = queryString.stringify(clone);
-
-        let sortBy = "";
-        if (sort && sort.name) {
-            sortBy = sort.name === 'ascend' ? "sort=name" : "sort=-name";
-        }
-        if (sort && sort.apiPath) {
-            sortBy = sort.apiPath === 'ascend' ? "sort=apiPath" : "sort=-apiPath";
-        }
-        if (sort && sort.method) {
-            sortBy = sort.method === 'ascend' ? "sort=method" : "sort=-method";
-        }
-        if (sort && sort.module) {
-            sortBy = sort.module === 'ascend' ? "sort=module" : "sort=-module";
-        }
-        if (sort && sort.createdAt) {
-            sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
-        }
-        if (sort && sort.updatedAt) {
-            sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";
-        }
-
-        //mặc định sort theo updatedAt
-        if (Object.keys(sortBy).length === 0) {
-            temp = `${temp}&sort=-updatedAt`;
+        const sortKey = Object.keys(sort)[0];
+        if (sortKey) {
+            const order = sort[sortKey] === 'ascend' ? `sort=${sortKey}` : `sort=-${sortKey}`;
+            query += `&${order}`;
         } else {
-            temp = `${temp}&${sortBy}`;
+            query += '&sort=-updatedAt';
         }
 
-        return temp;
-    }
+        return query;
+    };
 
     return (
-        <div>
-            <Access
-                permission={ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE}
-            >
-                <DataTable<IPermission>
-                    actionRef={tableRef}
-                    headerTitle="Danh sách Permissions (Quyền truy cập)"
-                    rowKey="_id"
-                    loading={isFetching}
-                    columns={columns}
-                    dataSource={permissions}
-                    request={async (params, sort, filter): Promise<any> => {
-                        const query = buildQuery(params, sort, filter);
-                        dispatch(fetchPermission({ query }))
-                    }}
-                    scroll={{ x: true }}
-                    pagination={
-                        {
-                            current: meta.current,
-                            pageSize: meta.pageSize,
-                            showSizeChanger: true,
-                            total: meta.total,
-                            showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
-                        }
-                    }
-                    rowSelection={false}
-                    toolBarRender={(_action, _rows): any => {
-                        return (
-                            <Access
-                                permission={ALL_PERMISSIONS.PERMISSIONS.CREATE}
-                                hideChildren
-                            >
-                                <Button
-                                    icon={<PlusOutlined />}
-                                    type="primary"
-                                    onClick={() => setOpenModal(true)}
-                                >
-                                    Thêm mới
-                                </Button>
-                            </Access>
-                        );
-                    }}
-                    search={{
-                        labelWidth: 'auto',
-                        span: 8
-                    }}
-                    form={{
-                        layout: 'horizontal', // Layout ngang cho label và input
-                        labelCol: { span: 4 }, // Độ rộng label 6/24
-                        wrapperCol: { span: 24 }, // Độ rộng input 18/24
-                        colon: false, // Bỏ dấu ":" ở cuối label
-                    }}
-                />
-            </Access>
-            {
-                openModal &&
+        <Access permission={ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE}>
+            <DataTable<IPermission>
+                actionRef={tableRef}
+                rowKey="_id"
+                columns={columns}
+                headerTitle="Danh sách Permissions (Quyền truy cập)"
+                scroll={{ x: true }}
+                rowSelection={false}
+                request={async (params, sort): Promise<any> => {
+                    const query = buildQuery(params, sort);
+                    const res = await dispatch(fetchPermission({ query })).unwrap();
+                    return {
+                        data: res.result || [],
+                        success: true,
+                        total: res.meta?.total || 0,
+                    };
+                }}
+                pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) => <div>{range[0]}-{range[1]} trên {total} dòng</div>,
+                }}
+                toolBarRender={() => (
+                    <Access permission={ALL_PERMISSIONS.PERMISSIONS.CREATE}>
+                        <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpenModal(true)}>
+                            Thêm mới
+                        </Button>
+                    </Access>
+                )}
+                search={{
+                    labelWidth: 'auto',
+                    span: 8,
+                }}
+                form={{
+                    layout: 'horizontal',
+                    labelCol: { span: 4 },
+                    wrapperCol: { span: 24 },
+                    colon: false,
+                }}
+            />
+
+            {openModal && (
                 <ModalPermission
                     openModal={openModal}
                     setOpenModal={setOpenModal}
-                    reloadTable={reloadTable}
+                    reloadTable={() => tableRef.current?.reload()}
                     dataInit={dataInit}
                     setDataInit={setDataInit}
                 />
-            }
+            )}
 
             <ViewDetailPermission
-                onClose={setOpenViewDetail}
                 open={openViewDetail}
+                onClose={setOpenViewDetail}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
             />
-        </div>
-    )
-}
+        </Access>
+    );
+};
 
 export default PermissionPage;
