@@ -176,7 +176,7 @@ const UserPage = () => {
                     columns={columns}
                     request={async (params, sort, filter) => {
                         const query = buildQuery(params, sort, filter);
-                        const res = await dispatch(fetchUser({ query })).unwrap();
+                        const res: any = await dispatch(fetchUser({ query })).unwrap();
                         return {
                             data: res?.result || [],
                             success: true,
@@ -191,8 +191,8 @@ const UserPage = () => {
                         ),
                     }}
                     rowSelection={false}
-                    toolBarRender={() => (
-                        <Access permission={ALL_PERMISSIONS.TEAMS.CREATE} hideChildren>
+                    toolBarRender={() => [
+                        <Access permission={ALL_PERMISSIONS.TEAMS.CREATE} hideChildren key="create-btn">
                             <Button
                                 icon={<PlusOutlined />}
                                 type="primary"
@@ -201,7 +201,8 @@ const UserPage = () => {
                                 Thêm mới
                             </Button>
                         </Access>
-                    )}
+                    ]}
+                    
                     form={{
                         layout: 'horizontal',
                         labelCol: { span: 6 },

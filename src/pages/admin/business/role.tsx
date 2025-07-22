@@ -108,7 +108,7 @@ const RolePage = () => {
                     columns={columns}
                     request={async (params, sort, filter) => {
                         const query = buildQuery(params, sort, filter);
-                        const res = await dispatch(fetchRole({ query })).unwrap();
+                        const res: any = await dispatch(fetchRole({ query })).unwrap();
                         return {
                             data: res?.result || [],
                             success: true,
@@ -123,7 +123,7 @@ const RolePage = () => {
                         ),
                     }}
                     rowSelection={false}
-                    toolBarRender={() => (
+                    toolBarRender={() => [
                         <Access permission={ALL_PERMISSIONS.ROLES.CREATE} hideChildren>
                             <Button
                                 icon={<PlusOutlined />}
@@ -133,7 +133,7 @@ const RolePage = () => {
                                 Thêm mới
                             </Button>
                         </Access>
-                    )}
+                    ]}
                     search={{ labelWidth: 'auto' }}
                     form={{
                         layout: 'horizontal',
