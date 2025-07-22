@@ -2,7 +2,7 @@ import DataTable from "@/components/client/data-table";
 import { useAppDispatch } from "@/redux/hooks";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button } from "antd";
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import queryString from 'query-string';
 import { fetchSpaceshipList } from "@/redux/slice/business/spaceshipSlide";
 import dayjs from "dayjs";
@@ -17,13 +17,17 @@ const ViewSpaceship = () => {
   const tableRef = useRef<ActionType>();
   const [openModal, setOpenModal] = useState(false);
   const [dataInit, setDataInit] = useState<any>(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+
+  // XÓA useEffect log searchInput, search
 
   const columns: ProColumns<any>[] = [
     {
       title: 'Tên',
       dataIndex: 'name',
       sorter: false,
-      fieldProps: { placeholder: 'Nhập dữ liệu' },
+      fieldProps: { placeholder: 'Nhập tên connect' },
     },
     {
       title: 'Người tạo',
@@ -92,13 +96,9 @@ const ViewSpaceship = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = { ...params };
-    if (clone.name) clone.name = `/${clone.name}/i`;
+    clone.search = clone.name;
+    if (clone.search) delete clone.name;
     let temp = queryString.stringify(clone);
-    let sortBy = "";
-    if (sort?.name) sortBy = sort.name === 'ascend' ? "sort=name" : "sort=-name";
-    if (sort?.createdAt) sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
-    if (sort?.updatedAt) sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";
-    temp += sortBy ? `&${sortBy}` : `&sort=-updatedAt`;
     return temp;
   };
 
@@ -110,12 +110,21 @@ const ViewSpaceship = () => {
         rowKey="_id"
         columns={columns}
         request={async (params, sort, filter) => {
-          const query = buildQuery(params, sort, filter);
+          // Gọi API với param search, debounce 500ms
+          const queryParams = { ...params };
+          if (search) {
+            queryParams.search = search;
+            delete queryParams.name;
+          }
+          // Xóa luôn các key không cần thiết
+          delete queryParams.keyword;
+          const query = buildQuery(queryParams, sort, filter);
           const res = await dispatch(fetchSpaceshipList(query)).unwrap();
           const currentPage = params.current || 1;
           if ((res?.result?.length === 0) && (currentPage > 1)) {
             // Nếu trang hiện tại rỗng và lớn hơn 1, tự động load lại trang trước
             const prevParams = { ...params, current: currentPage - 1 };
+            if (search) prevParams.search = search;
             const prevQuery = buildQuery(prevParams, sort, filter);
             const prevRes = await dispatch(fetchSpaceshipList(prevQuery)).unwrap();
             return {
@@ -141,7 +150,10 @@ const ViewSpaceship = () => {
         toolBarRender={() => [
           <Button type="primary" key="add" onClick={() => setOpenModal(true)}>Thêm mới</Button>
         ]}
-        search={{ labelWidth: 'auto' }}
+        search={{
+          labelWidth: 'auto',
+          onChange: (values) => setSearchInput(values.search || ""),
+        }}
         form={{
           layout: 'horizontal',
           colon: false,

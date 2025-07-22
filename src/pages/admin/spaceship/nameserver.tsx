@@ -176,6 +176,7 @@ const NameServer = () => {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailData, setDetailData] = useState<any>(null);
   const [detailDomain, setDetailDomain] = useState<{ connectId: string, domain: string } | null>(null);
+  const [connectSearch, setConnectSearch] = useState("");
 
   // Đảm bảo handleShowDetail ở đúng scope trước khi khai báo columns
   const handleShowDetail = (record: DataType) => {
@@ -246,18 +247,20 @@ const NameServer = () => {
     })();
   }, [detailOpen, detailDomain]);
 
+  // Fetch connects khi search
   useEffect(() => {
     const fetchConnects = async () => {
       setLoadingConnect(true);
       try {
-        const res = await callFetchSpaceshipList("current=1&pageSize=10");
+        const params = connectSearch ? `current=1&pageSize=10&search=${encodeURIComponent(connectSearch)}` : "current=1&pageSize=10";
+        const res = await callFetchSpaceshipList(params);
         setConnects(res?.result || []);
       } finally {
         setLoadingConnect(false);
       }
     };
     fetchConnects();
-  }, []);
+  }, [connectSearch]);
 
   // Reset bảng phải và kết quả chỉ khi đổi connect
   useEffect(() => {
@@ -348,10 +351,13 @@ const NameServer = () => {
       >
         <Spin spinning={loadingConnect}>
           <Select
+            showSearch
             style={{ width: isMobile ? '100%' : 220, marginBottom: isMobile ? 8 : 0 }}
             placeholder="Chọn connect"
             value={selectedId}
             onChange={setSelectedId}
+            onSearch={setConnectSearch}
+            filterOption={false}
             options={connects.map((item) => ({ label: item.name, value: item._id }))}
             allowClear
           />
