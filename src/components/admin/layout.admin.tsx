@@ -84,6 +84,48 @@ const LayoutAdmin = () => {
           },
         ],
       },
+      {
+        label: "Quản lý Sav.com",
+        key: "/managementSav",
+        icon: (
+          <img
+            src={
+              activeMenu.startsWith("/managementSav")
+                ? ActiveManagement
+                : Management
+            }
+            alt="managementSav"
+          />
+        ),
+        children: [
+          {
+            label: <Link to="/managementSav/connect">Quản lý connect</Link>,
+            key: "/managementSav/connect",
+            icon: (
+              <img
+                src={
+                  activeMenu === "/managementSav/connect"
+                    ? ActivePermission
+                    : Permission
+                }
+                alt="connect"
+              />
+            ),
+          },
+          {
+            label: <Link to="/managementSav/domain">Quản lý domain sav</Link>,
+            key: "/managementSav/domain",
+            icon: (
+              <img
+                src={
+                  activeMenu === "/managementSav/domain" ? ActiveRole : Role
+                }
+                alt="domain"
+              />
+            ),
+          },
+        ],
+      },
     ];
 
     setMenuItems(full);

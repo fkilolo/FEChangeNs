@@ -12,6 +12,8 @@ import UserPage from "./pages/admin/business/user";
 import DashboardPage from "./pages/admin/dashboard";
 import WhoIsDomain from "./pages/admin/whoIsDomain";
 import { fetchAccount } from "./redux/slice/business/auth/accountSlide";
+import ConnectSav from "./pages/admin/config-domain/connectSav";
+import DomainSav from "./pages/admin/config-domain/domainSav";
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -56,6 +58,14 @@ export default function App() {
         {
           path: "/management/role",
           element: <RolePage />
+        },
+        {
+          path: "/managementSav/connect",
+          element: <ConnectSav />
+        },
+        {
+          path: "/managementSav/domain",
+          element: <DomainSav />
         },
       
        
