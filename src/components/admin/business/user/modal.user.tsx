@@ -67,8 +67,8 @@ const ModalUser = (props: IProps) => {
                 password
             }
 
-            const res = await callUpdateUser(user, dataInit._id);
-            if (res.data) {
+            const res: any = await callUpdateUser(user, dataInit._id);
+            if (res) {
                 message.success("Cập nhật user thành công");
                 handleReset();
                 // reloadTable();
@@ -91,8 +91,8 @@ const ModalUser = (props: IProps) => {
                 telegramName,
                 telegramId,
             }
-            const res = await callCreateUser(user);
-            if (res.data) {
+            const res: any = await callCreateUser(user);
+            if (res) {
                 message.success("Thêm mới user thành công");
                 handleReset();
                 // reloadTable();
@@ -113,13 +113,13 @@ const ModalUser = (props: IProps) => {
     }
 
     async function fetchRoleList(name: string): Promise<IRoleSelect[]> {
-        const res = await callFetchRole(`current=1&pageSize=100&name=/${name}/i`);
-        if (res && res.data) {
-            const list = res.data.result;
-            const temp = list.map(item => {
+        const res :any= await callFetchRole(`current=1&pageSize=100&name=/${name}/i`);
+        if (res) {
+            const list = res.result;
+            const temp = list.map((item: { name: string; _id: string }) => {
                 return {
-                    label: item.name as string,
-                    value: item._id as string
+                    label: item.name,
+                    value: item._id
                 }
             })
             return temp;
@@ -206,7 +206,7 @@ const ModalUser = (props: IProps) => {
                             />
                         </ProForm.Item>
                     </Col>
-                    <Col lg={6} md={6} sm={24} xs={24}>
+                    {/* <Col lg={6} md={6} sm={24} xs={24}>
                         <ProFormSelect
                             name="position"
                             label="Chức vụ"
@@ -238,7 +238,7 @@ const ModalUser = (props: IProps) => {
                             name="telegramId"
                             placeholder="Nhập id telegram"
                         />
-                    </Col>
+                    </Col> */}
                     <Col lg={6} md={6} sm={24} xs={24}>
                         <ProFormText
                             label="Email"

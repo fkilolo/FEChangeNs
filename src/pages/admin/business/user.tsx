@@ -30,8 +30,8 @@ const UserPage = () => {
 
     const handleDeleteUser = async (_id: string | undefined) => {
         if (_id) {
-            const res = await callDeleteUser(_id);
-            if (res && res.data) {
+            const res: any = await callDeleteUser(_id);
+            if (res ) {
                 message.success('Xóa tài khoản thành công');
                 tableRef.current?.reload();
             } else {
@@ -92,14 +92,6 @@ const UserPage = () => {
             sorter: true,
         },
         {
-            title: 'Chức vụ',
-            dataIndex: 'position',
-            valueType: 'select',
-            valueEnum: ALL_POSITION,
-            render: (_, record) => <span>{record?.position}</span>,
-            sorter: true,
-        },
-        {
             title: 'Trạng thái',
             dataIndex: 'status',
             valueType: 'select',
@@ -108,16 +100,6 @@ const UserPage = () => {
                 record.status === 1
                     ? <Tag color="green">Đang làm việc</Tag>
                     : <Tag color="red">Nghỉ việc</Tag>,
-            sorter: true,
-        },
-        {
-            title: 'Tên telegram',
-            dataIndex: 'telegramName',
-            sorter: true,
-        },
-        {
-            title: 'Telegram',
-            dataIndex: 'telegramId',
             sorter: true,
         },
         {
