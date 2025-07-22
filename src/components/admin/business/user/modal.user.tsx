@@ -6,8 +6,6 @@ import { DebounceSelect } from "../../../client/data-select/debouce.select";
 import { callCreateUser, callUpdateUser } from "@/config/api/business/user.api";
 import { callFetchRole } from "@/config/api/business/role.api";
 import { callFetchTeamPublic } from "@/config/api/business/team.api";
-import { ALL_POSITION } from "@/config/data/position";
-import { ALL_USER_STATUS_SELECT } from "@/config/data/user-status";
 import { IUser } from "@/types/model/userModel/user.d";
 import { IRoleSelect } from "@/types/model/roleModel/roleSelect.d";
 import { ITeamSelect } from "@/types/model/teamModel/teamSelect.d";

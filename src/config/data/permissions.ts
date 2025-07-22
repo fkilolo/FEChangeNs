@@ -237,6 +237,94 @@ export const ALL_PERMISSIONS = {
     PURGE_CACHE: { method: "POST", apiPath: "/api/v1/linode/pull-zone/:id/:pullZoneId/purge-cache", module: "LINODE" },
     MANAGER_BLOCK_IP: { method: "POST", apiPath: "/api/v1/linode/pull-zone/:id/:pullZoneId/block-ip", module: "LINODE" },
   },
+  SAV: {
+    GET_ACTIVE_DOMAINS: {
+      method: "GET",
+      apiPath: "/api/v1/sav/domains",
+      module: "SAV",
+    },
+    GET_AUCTION_SALES: {
+      method: "GET",
+      apiPath: "/api/v1/sav/auction-sales",
+      module: "SAV",
+    },
+    GET_PREMIUM_SALES: {
+      method: "GET",
+      apiPath: "/api/v1/sav/premium-sales",
+      module: "SAV",
+    },
+    REMOVE_DOMAIN_SALE: {
+      method: "POST",
+      apiPath: "/api/v1/sav/remove-domain-sale",
+      module: "SAV",
+    },
+    SUBMIT_AUTH_CODE: {
+      method: "POST",
+      apiPath: "/api/v1/sav/submit-auth-code",
+      module: "SAV",
+    },
+    UPDATE_AUTO_RENEW: {
+      method: "POST",
+      apiPath: "/api/v1/sav/update-auto-renew",
+      module: "SAV",
+    },
+    UPDATE_SALE_PRICE: {
+      method: "POST",
+      apiPath: "/api/v1/sav/update-sale-price",
+      module: "SAV",
+    },
+    UPDATE_NAMESERVERS: {
+      method: "POST",
+      apiPath: "/api/v1/sav/update-nameservers",
+      module: "SAV",
+    },
+    UPDATE_PRIVACY: {
+      method: "POST",
+      apiPath: "/api/v1/sav/update-privacy",
+      module: "SAV",
+    },
+    UPDATE_WHOIS: {
+      method: "POST",
+      apiPath: "/api/v1/sav/update-whois",
+      module: "SAV",
+    },
+    LIST_DOMAIN_SALE: {
+      method: "POST",
+      apiPath: "/api/v1/sav/list-domain-sale",
+      module: "SAV",
+    },
+    GET_PRICING: {
+      method: "GET",
+      apiPath: "/api/v1/sav/pricing",
+      module: "SAV",
+    },
+    CREATE: {
+      method: "POST",
+      apiPath: "/api/v1/sav",
+      module: "SAV",
+    },
+    GET_PAGINATE: {
+      method: "GET",
+      apiPath: "/api/v1/sav",
+      module: "SAV",
+    },
+    GET_BY_ID: {
+      method: "GET",
+      apiPath: "/api/v1/sav/:id",
+      module: "SAV",
+    },
+    UPDATE: {
+      method: "PATCH",
+      apiPath: "/api/v1/sav/:id",
+      module: "SAV",
+    },
+    DELETE: {
+      method: "DELETE",
+      apiPath: "/api/v1/sav/:id",
+      module: "SAV",
+    },
+  },
+  
 }
 
 export const ALL_MODULES = {
@@ -267,4 +355,5 @@ export const ALL_MODULES = {
   CLOUDOVH: 'CLOUDOVH',
   BUNNY: 'BUNNY',
   LINODE: 'LINODE',
+  SAV: 'SAV',
 };
