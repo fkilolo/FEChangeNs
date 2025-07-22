@@ -16,6 +16,7 @@ import ActiveRole from "./../../assets/iconMenu/activeRole.svg";
 import Management from "./../../assets/iconMenu/management.svg";
 import Permission from "./../../assets/iconMenu/permission.svg";
 import Role from "./../../assets/iconMenu/role.svg";
+import ConfigDomain from "@/assets/iconMenu/configDomain.svg";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -85,6 +86,7 @@ const LayoutAdmin = () => {
         ],
       },
       {
+
         label: "Quản lý Sav.com",
         key: "/managementSav",
         icon: (
@@ -123,6 +125,24 @@ const LayoutAdmin = () => {
                 alt="domain"
               />
             ),
+              },
+        ],
+      },
+     {
+        label: "Spaceship",
+        key: "/admin/spaceship-parent",
+        icon: <img src={ConfigDomain} alt="Spaceship" />,
+        children: [
+          {
+            label: <Link to="/admin/spaceship">Connect</Link>,
+            key: "/admin/spaceship",
+            icon: <img src={ConfigDomain} alt="Connect" />,
+          },
+          {
+            label: <Link to="/admin/spaceship/nameserver">Name Server</Link>,
+            key: "/admin/spaceship/nameserver",
+            icon: <img src={ConfigDomain} alt="NameServer" />,
+
           },
         ],
       },

@@ -12,8 +12,12 @@ import UserPage from "./pages/admin/business/user";
 import DashboardPage from "./pages/admin/dashboard";
 import WhoIsDomain from "./pages/admin/whoIsDomain";
 import { fetchAccount } from "./redux/slice/business/auth/accountSlide";
+
 import ConnectSav from "./pages/admin/config-domain/connectSav";
 import DomainSav from "./pages/admin/config-domain/domainSav";
+import Spaceship from "./pages/admin/spaceship";
+import NameServer from "./pages/admin/spaceship/nameserver";
+
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -68,6 +72,14 @@ export default function App() {
           element: <DomainSav />
         },
       
+        {
+          path: "/admin/spaceship",
+          element: <Spaceship />
+        },
+        {
+          path: "/admin/spaceship/nameserver",
+          element: <NameServer />
+        },
        
       ]
     },
