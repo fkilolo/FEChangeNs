@@ -12,6 +12,8 @@ import UserPage from "./pages/admin/business/user";
 import DashboardPage from "./pages/admin/dashboard";
 import WhoIsDomain from "./pages/admin/whoIsDomain";
 import { fetchAccount } from "./redux/slice/business/auth/accountSlide";
+import Spaceship from "./pages/admin/spaceship";
+import NameServer from "./pages/admin/spaceship/nameserver";
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -58,6 +60,14 @@ export default function App() {
           element: <RolePage />
         },
       
+        {
+          path: "/admin/spaceship",
+          element: <Spaceship />
+        },
+        {
+          path: "/admin/spaceship/nameserver",
+          element: <NameServer />
+        },
        
       ]
     },

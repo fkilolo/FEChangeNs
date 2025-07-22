@@ -4,6 +4,7 @@ import permissionReducer from "./slice/business/auth/permissionSlide";
 import userReducer from "./slice/business/auth/userSlide";
 
 import roleReducer from "./slice/business/roleSlide";
+import spaceshipReducer from "./slice/business/spaceshipSlide";
 
 
 export const store = configureStore({
@@ -12,7 +13,7 @@ export const store = configureStore({
     user: userReducer,
     permission: permissionReducer,
     role: roleReducer,
-   
+    spaceship: spaceshipReducer,
   },
 });
 
