@@ -1,0 +1,27 @@
+.bunny-zone-filter {
+  width: 100%;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.record-item-bunny {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #fafafa;
+  border: 1px solid #eee;
+}
+
+.record-item-bunny:hover {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  transition: all 0.2s;
+}
+
+.container-bg-white {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 16px;
+}

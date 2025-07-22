@@ -1,0 +1,1 @@
+export const ROLE_TRO_LY_CHU_QUAN = "TRO_LY_CHU_QUAN";

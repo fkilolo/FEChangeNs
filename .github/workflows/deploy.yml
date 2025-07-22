@@ -1,0 +1,52 @@
+name: Deploy admin_ticket_domain_okVip
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.8.0'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build app
+        run: yarn run build
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /www/wwwroot/domain_ticket/TicketDomainOkvipAdmim
+            # check git status --porcelain
+            if [ -n "$(git status --porcelain)" ]; then
+              git stash
+            else
+              echo "No changes to stash."
+            fi
+            # stash drop is change
+            if git stash list | grep -q .; then
+              git stash drop
+            else
+              echo "No stash entries found."
+            fi
+            # git pull
+            git pull origin main
+            # yarn install
+            yarn install
+            # yarn run build
+            yarn run buildProd
