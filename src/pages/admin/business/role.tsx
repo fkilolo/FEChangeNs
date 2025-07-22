@@ -16,11 +16,12 @@ const RolePage = () => {
     const dispatch = useAppDispatch();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const tableRef = useRef<ActionType>();
+    const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
     const handleDeleteRole = async (_id: string | undefined) => {
         if (_id) {
-            const res = await callDeleteRole(_id);
-            if (res && res.data) {
+            const res: any = await callDeleteRole(_id);
+            if (res) {
                 message.success('Xóa Role thành công');
                 tableRef?.current?.reload();
             } else {
@@ -59,8 +60,8 @@ const RolePage = () => {
                         <EditOutlined
                             style={{ fontSize: 20, color: '#ffa500' }}
                             onClick={() => {
-                                dispatch(fetchRoleById(entity._id as string));
                                 setOpenModal(true);
+                                setSelectedRoleId(entity._id as string);
                             }}
                         />
                     </Access>
@@ -147,6 +148,7 @@ const RolePage = () => {
                     openModal={openModal}
                     setOpenModal={setOpenModal}
                     reloadTable={() => tableRef.current?.reload()}
+                    selectedRoleId={selectedRoleId ?? ''}
                 />
             )}
         </div>

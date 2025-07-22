@@ -27,8 +27,8 @@ const ModalPermission = (props: IProps) => {
                 apiPath, method, module
             }
 
-            const res = await callUpdatePermission(permission, dataInit._id);
-            if (res.data) {
+            const res: any = await callUpdatePermission(permission, dataInit._id);
+            if (res) {
                 message.success("Cập nhật permission thành công");
                 handleReset();
                 reloadTable();
@@ -44,8 +44,8 @@ const ModalPermission = (props: IProps) => {
                 name,
                 apiPath, method, module
             }
-            const res = await callCreatePermission(permission);
-            if (res.data) {
+            const res : any= await callCreatePermission(permission);
+            if (res) {
                 message.success("Thêm mới permission thành công");
                 handleReset();
                 reloadTable();
