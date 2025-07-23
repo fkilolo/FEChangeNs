@@ -59,7 +59,10 @@ const ModalSpaceship = (props: IProps) => {
       <ProFormText
         name="name"
         label="Tên Spaceship"
-        rules={[{ required: true, message: "Vui lòng nhập tên" }]}
+        rules={[
+          { required: true, message: "Vui lòng nhập tên" },
+          { min: 1, max: 60, message: "Tên phải từ 1 đến 60 ký tự" },
+        ]}
         placeholder="Nhập tên spaceship"
       />
       <ProFormText
