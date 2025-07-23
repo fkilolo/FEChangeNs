@@ -388,20 +388,30 @@ const NameServer = () => {
       </Flex>
       {updateResult && (
         <div style={{ marginBottom: 16 }}>
-          {updateResult.map((item, idx) => (
-            <Alert
-              key={idx}
-              type={item.success ? "success" : "error"}
-              showIcon
-              message={
-                item.success
-                  ? `Cập nhật thành công: ${item.domain}`
-                  : `Cập nhật thất bại ${item.domain} vui lòng thử lại`
-              }
-              description={undefined}
-              style={{ marginBottom: 8 }}
-            />
-          ))}
+          {(() => {
+            const total = updateResult.length;
+            const successCount = updateResult.filter(item => item.success).length;
+            const failed = updateResult.filter(item => !item.success);
+            if (failed.length === 0) {
+              return (
+                <Alert
+                  type="success"
+                  showIcon
+                  message={`Cập nhật thành công ${successCount}/${total}`}
+                  style={{ marginBottom: 8 }}
+                />
+              );
+            }
+            return failed.map((item, idx) => (
+              <Alert
+                key={idx}
+                type="error"
+                showIcon
+                message={`Cập nhật thất bại ${item.domain} vui lòng thử lại`}
+                style={{ marginBottom: 8 }}
+              />
+            ));
+          })()}
         </div>
       )}
       <div style={{ fontSize: 13, color: '#888', marginBottom: 8 }}>
