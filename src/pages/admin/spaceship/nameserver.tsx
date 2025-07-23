@@ -92,7 +92,7 @@ const TableTransfer: React.FC<TableTransferProps & {
               pageSize={rightPageSize}
               total={rightTotal}
               showSizeChanger
-              pageSizeOptions={["1", "2", "3", "4", "5"]}
+              pageSizeOptions={["10", "20", "30", "50", "100"]}
               onChange={(page, pageSize) => {
                 setRightPage(page);
                 setRightPageSize(pageSize || 10);
@@ -112,7 +112,7 @@ const TableTransfer: React.FC<TableTransferProps & {
               pageSize: leftPageSize,
               total: leftTotal,
               showSizeChanger: true,
-              pageSizeOptions: ["1", "2", "3", "4", "5"],
+              pageSizeOptions: ["10", "20", "30", "50", "100"],
               onChange: (page, pageSize) => {
                 setLeftPage(page);
                 setLeftPageSize(pageSize || 10);
@@ -150,6 +150,8 @@ const filterOption = (input: string, item: DataType) =>
 
 const NameServer = () => {
   const [connects, setConnects] = useState<any[]>([]);
+  const [connectPage, setConnectPage] = useState(1);
+  const [connectTotalPage, setConnectTotalPage] = useState(1);
   const [loadingConnect, setLoadingConnect] = useState(false);
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const [domains, setDomains] = useState<DataType[]>([]);
@@ -247,19 +249,27 @@ const NameServer = () => {
     })();
   }, [detailOpen, detailDomain]);
 
-  // Fetch connects khi search
-  useEffect(() => {
-    const fetchConnects = async () => {
-      setLoadingConnect(true);
-      try {
-        const params = connectSearch ? `current=1&pageSize=10&search=${encodeURIComponent(connectSearch)}` : "current=1&pageSize=10";
-        const res = await callFetchSpaceshipList(params);
+  // Fetch connect với phân trang và search
+  const fetchConnects = async (page = 1, search = "") => {
+    setLoadingConnect(true);
+    try {
+      const params = `current=${page}&pageSize=10${search ? `&search=${encodeURIComponent(search)}` : ""}`;
+      const res = await callFetchSpaceshipList(params);
+      if (page === 1) {
         setConnects(res?.result || []);
-      } finally {
-        setLoadingConnect(false);
+      } else {
+        setConnects(prev => [...prev, ...(res?.result || [])]);
       }
-    };
-    fetchConnects();
+      setConnectPage(res?.meta?.current || 1);
+      setConnectTotalPage(res?.meta?.pages || 1);
+    } finally {
+      setLoadingConnect(false);
+    }
+  };
+
+  // Fetch connect khi search hoặc mount
+  useEffect(() => {
+    fetchConnects(1, connectSearch);
   }, [connectSearch]);
 
   // Reset bảng phải và kết quả chỉ khi đổi connect
@@ -356,10 +366,21 @@ const NameServer = () => {
             placeholder="Chọn connect"
             value={selectedId}
             onChange={setSelectedId}
-            onSearch={setConnectSearch}
+            onSearch={value => {
+              setConnectSearch(value);
+              setConnectPage(1);
+            }}
             filterOption={false}
             options={connects.map((item) => ({ label: item.name, value: item._id }))}
             allowClear
+            onPopupScroll={e => {
+              const target = e.target as HTMLElement;
+              if (target.scrollTop + target.offsetHeight >= target.scrollHeight - 10) {
+                if (connectPage < connectTotalPage && !loadingConnect) {
+                  fetchConnects(connectPage + 1, connectSearch);
+                }
+              }
+            }}
           />
         </Spin>
         <Flex gap={8} align="center">
