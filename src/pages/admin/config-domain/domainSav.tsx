@@ -21,6 +21,8 @@ const DomainSavPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isUpdateAll, setIsUpdateAll] = useState(false);
   const [dataInit, setDataInit] = useState<IDomainSav | null>(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRows, setSelectedRows] = useState<IDomainSav[]>([]);
   const tableRef = useRef<ActionType>();
 
   const openUpdateModal = (record?: IDomainSav) => {
@@ -29,18 +31,25 @@ const DomainSavPage = () => {
     setOpenModal(true);
   };
 
-  const handleSubmit = async (values: Partial<IDomainSav>) => {
+  const handleSubmit = async (values: Partial<any>) => {
     try {
       setLoadingUpdate(true);
       if (isUpdateAll) {
-        await callUpdateAllDomainSav("", values);
-        message.success("Cập nhật tất cả domain thành công");
+        const domainList = selectedRows.map((item) => item.domain_name);
+        await callUpdateAllDomainSav("", {
+          ns_1: values.ns_1,
+          ns_2: values.ns_2,
+          domainList: (domainList || []).filter((d): d is string => typeof d === "string"),
+        });
+        message.success("Cập nhật các domain đã chọn thành công");
       } else if (dataInit?._id) {
         await callUpdateDomainSav(dataInit._id, values);
         message.success("Cập nhật domain thành công");
       }
       tableRef.current?.reload();
       setOpenModal(false);
+      setSelectedRowKeys([]);
+      setSelectedRows([]);
     } catch (error) {
       notification.error({
         message: "Lỗi cập nhật",
@@ -124,15 +133,23 @@ const DomainSavPage = () => {
             </div>
           ),
         }}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (keys, rows) => {
+            setSelectedRowKeys(keys);
+            setSelectedRows(rows);
+          },
+        }}
         toolBarRender={() => [
           <Access permission={ALL_PERMISSIONS.SAV.UPDATE} key="updateAll">
             <Button
               type="primary"
               icon={<SyncOutlined />}
+              disabled={selectedRowKeys.length === 0}
               onClick={() => openUpdateModal()}
               loading={loadingUpdate}
             >
-              Cập nhật tất cả
+              Cập nhật tất cả ({selectedRowKeys.length})
             </Button>
           </Access>,
         ]}
