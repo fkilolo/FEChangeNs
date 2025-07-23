@@ -13,10 +13,11 @@ import DashboardPage from "./pages/admin/dashboard";
 import WhoIsDomain from "./pages/admin/whoIsDomain";
 import { fetchAccount } from "./redux/slice/business/auth/accountSlide";
 
-import ConnectSav from "./pages/admin/config-domain/connectSav";
-import DomainSav from "./pages/admin/config-domain/domainSav";
+
 import Spaceship from "./pages/admin/spaceship";
 import NameServer from "./pages/admin/spaceship/nameserver";
+import ConnectSavPage from "./pages/admin/config-domain/connectSav";
+import DomainSavPage from "./pages/admin/config-domain/domainSav";
 
 
 export default function App() {
@@ -65,11 +66,11 @@ export default function App() {
         },
         {
           path: "/managementSav/connect",
-          element: <ConnectSav />
+          element: <ConnectSavPage />
         },
         {
           path: "/managementSav/domain",
-          element: <DomainSav />
+          element: <DomainSavPage />
         },
       
         {
