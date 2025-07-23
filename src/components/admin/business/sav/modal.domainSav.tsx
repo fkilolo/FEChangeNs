@@ -3,7 +3,7 @@ import {
     ProFormText,
   } from "@ant-design/pro-components";
   import { IDomainSav } from "@/types/model/savModel/domainSav.d";
-  import { Form } from "antd";
+  import { Form, Typography } from "antd";
   import { useEffect } from "react";
   
   type Props = {
@@ -39,13 +39,13 @@ import {
   
     return (
       <ModalForm
-        title={isUpdateAll ? "Cập nhật toàn bộ Domain" : "Cập nhật Domain"}
+        title={isUpdateAll ? "Cập nhật nameservers cho các Domain đã chọn" : "Cập nhật Domain"}
         open={open}
         form={form}
         onFinish={async (values) => {
-            await onSubmit(values);
-            return true;
-          }}
+          await onSubmit(values);
+          return true;
+        }}
         onOpenChange={(val) => !val && onClose()}
         width={400}
         modalProps={{
@@ -55,13 +55,14 @@ import {
           destroyOnClose: true,
         }}
       >
-        {!isUpdateAll && (
-          <ProFormText
-            name="domain_name"
-            label="Tên domain"
-            disabled
-          />
+        {isUpdateAll ? (
+          <Typography.Text type="secondary">
+            Bạn đang cập nhật NS cho các domain đã chọn.
+          </Typography.Text>
+        ) : (
+          <ProFormText name="domain_name" label="Tên domain" disabled />
         )}
+  
         <ProFormText
           name="ns_1"
           label="NS1"

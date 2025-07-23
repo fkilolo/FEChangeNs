@@ -5,7 +5,7 @@ export interface IDomainSav {
     domain_name?: string;
     ns_1?: string;
     ns_2?: string;
-  
+    domainList?: string[];
     // Copy lại các trường từ IBasic nếu cần
     createdBy?: string;
     isDeleted?: boolean;
