@@ -8,6 +8,7 @@ import roleReducer from "./slice/business/roleSlide";
 import connectSavReducer from "./slice/business/sav/connectSavSlide";
 import domainSavReducer from "./slice/business/sav/domainSavSlide";
 import spaceshipReducer from "./slice/business/spaceshipSlide";
+import dynadotReducer from "./slice/business/dynadotSlide";
 
 
 export const store = configureStore({
@@ -20,6 +21,7 @@ export const store = configureStore({
     connectSav: connectSavReducer,
     domainSav: domainSavReducer,
     spaceship: spaceshipReducer,
+    dynadot: dynadotReducer,
   },
 
 });

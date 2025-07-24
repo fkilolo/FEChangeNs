@@ -18,6 +18,8 @@ import Spaceship from "./pages/admin/spaceship";
 import NameServer from "./pages/admin/spaceship/nameserver";
 import ConnectSavPage from "./pages/admin/config-domain/connectSav";
 import DomainSavPage from "./pages/admin/config-domain/domainSav";
+import Dynadot from "./pages/admin/dynadot";
+import DynadotNameServer from "./pages/admin/dynadot/nameserver";
 
 
 export default function App() {
@@ -80,6 +82,14 @@ export default function App() {
         {
           path: "/admin/spaceship/nameserver",
           element: <NameServer />
+        },
+        {
+          path: "/admin/dynadot",
+          element: <Dynadot />
+        },
+        {
+          path: "/admin/dynadot/nameserver",
+          element: <DynadotNameServer />
         },
        
       ]

@@ -146,6 +146,23 @@ const LayoutAdmin = () => {
           },
         ],
       },
+      {
+        label: "Dynadot",
+        key: "/admin/dynadot-parent",
+        icon: <img src={ConfigDomain} alt="Dynadot" />,
+        children: [
+          {
+            label: <Link to="/admin/dynadot">Connect</Link>,
+            key: "/admin/dynadot",
+            icon: <img src={ConfigDomain} alt="Connect" />,
+          },
+          {
+            label: <Link to="/admin/dynadot/nameserver">Name Server</Link>,
+            key: "/admin/dynadot/nameserver",
+            icon: <img src={ConfigDomain} alt="NameServer" />,
+          },
+        ],
+      },
     ];
 
     setMenuItems(full);
